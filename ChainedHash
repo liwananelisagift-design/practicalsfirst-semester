@@ -1,0 +1,115 @@
+import java.util.LinkedList;
+
+public class ChainedHash {
+
+    // Entry for the linked list
+    private static class Entry {
+        String key;
+        String value;
+
+        Entry(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    private LinkedList<Entry>[] table;
+    private int m;  // table size
+
+    // Constructor
+    @SuppressWarnings("unchecked")
+    public ChainedHash(int m) {
+        this.m = m;
+        table = new LinkedList[m + 1]; // indices [1..m], leave 0 unused
+        for (int i = 1; i <= m; i++) {
+            table[i] = new LinkedList<>();
+        }
+    }
+
+    // Hash function (same as openHash)
+    public int hash(String key) {
+        long hash = 0;
+        int prime = 31;
+        for (int i = 0; i < key.length(); i++) {
+            hash = (hash * prime + key.charAt(i)) % m;
+        }
+        return (int) hash + 1; // shift to 1..m
+    }
+
+    // Insert key-value pair
+    public void insert(String key, String value) {
+        int index = hash(key);
+        LinkedList<Entry> bucket = table[index];
+
+        // Search if key exists, update if found
+        for (Entry e : bucket) {
+            if (e.key.equals(key)) {
+                e.value = value;
+                return;
+            }
+        }
+
+        // Not found → append to end
+        bucket.add(new Entry(key, value));
+    }
+
+    // Lookup key
+    public String lookup(String key) {
+        int index = hash(key);
+        LinkedList<Entry> bucket = table[index];
+
+        for (Entry e : bucket) {
+            if (e.key.equals(key)) {
+                return e.value;
+            }
+        }
+        return null; // not found
+    }
+
+    // Check if key exists
+    public boolean isInTable(String key) {
+        return lookup(key) != null;
+    }
+
+    // Debug: print table
+    public void printTable() {
+        for (int i = 1; i <= m; i++) {
+            System.out.print(i + ": ");
+            for (Entry e : table[i]) {
+                System.out.print("(" + e.key + "," + e.value + ") -> ");
+            }
+            System.out.println("null");
+        }
+    }
+
+    // Timing experiment
+    public static void main(String[] args) {
+        int m = 10;       // table size
+        int N = 15;       // number of entries (N > m)
+        int repetitions = 30;
+
+        ChainedHash hashTable = new ChainedHash(m);
+
+        // Insert N small entries for testing
+        for (int i = 1; i <= N; i++) {
+            hashTable.insert("key" + i, "value" + i);
+        }
+
+        // Measure lookup time
+        long totalTime = 0;
+        for (int rep = 0; rep < repetitions; rep++) {
+            long start = System.currentTimeMillis();
+            for (int i = 1; i <= N; i++) {
+                hashTable.lookup("key" + i);
+            }
+            long end = System.currentTimeMillis();
+            totalTime += (end - start);
+        }
+
+        System.out.println("Average lookup time over " + repetitions + " runs: " 
+                           + (totalTime / repetitions) + " ms");
+
+        // Optional: print table
+        hashTable.printTable();
+    }
+}
