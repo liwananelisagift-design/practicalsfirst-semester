@@ -32,4 +32,30 @@ while ((line = reader.readline()) != null){
                 }
         }
     }
+     reader.close();
+
+    for (String key : D.keySet()) {
+            ArrayList<String> list = D.get(key);
+
+            if (list.size() >= 2) {
+                System.out.println(key + " : " + list);
+            }
+        }
+
+
+       PrintWriter out = new PrintWriter(new FileWriter("theAnagrams.tex"));
+
+       key : D.keySet()) {
+        st<String> list = D.get(key);
+
+        if (list.size() >=2){
+            System.out.println("\\textbf{"+ key + "} : " + list + "\\\\");
+
+        }
+       }
+     out.close();
+   }
+}
+    
+    
     
