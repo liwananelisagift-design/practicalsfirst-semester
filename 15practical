@@ -1,1 +1,12 @@
+import java.io.*;
+import java.util.*;
 
+public class Anagrams{
+    
+    public static void main(Strign[] args)throws Exception{
+        
+       HahsMap<String, ArrayList<String>> D = new HashMap<>();
+
+       BufferedReader reader = new BufferedReader(new FileReader("ulysses.text"));
+
+    
