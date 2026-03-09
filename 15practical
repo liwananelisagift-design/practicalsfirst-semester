@@ -9,4 +9,27 @@ public class Anagrams{
 
        BufferedReader reader = new BufferedReader(new FileReader("ulysses.text"));
 
+while ((line = reader.readline()) != null){
+        String[] words = line.split("\\s+");
+
+        for (strig w : words){
+
+            w = w.replaceAll("[^a-zA-Z']","");
+
+            w= w.toLowerCase();
+           
+            char[] chars = w.toCharArray();
+                Arrays.sort(chars);
+                String key = new String(chars);
+
+                if (!D.containsKey(key)){
+                    ArrayList<String> list = new ArrayList<>();
+                    list.add(w);
+                    D.put(key,list);
+
+                }else{
+                    D.get(key).add(w);
+                }
+        }
+    }
     
